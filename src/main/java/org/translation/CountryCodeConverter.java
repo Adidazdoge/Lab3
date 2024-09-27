@@ -33,7 +33,7 @@ public class CountryCodeConverter {
             List<String> lines = Files.readAllLines(Paths.get(Objects.requireNonNull(getClass()
                     .getClassLoader().getResource(filename)).toURI()));
             for (String line : lines) {
-                String[] parts = line.split(" ");
+                String[] parts = line.split("\\s+");
                 contryinfo.add(parts);
             }
 
