@@ -55,25 +55,48 @@ public class Main {
     }
 
     private static String promptForCountry(Translator translator) {
+
         List<String> countries = translator.getCountries();
+
+        CountryCodeConverter countryConverter = new CountryCodeConverter();
+
+        for (int i = 0; i < countries.size(); i++) {
+            String countryName = countryConverter.fromCountryCode(countries.get(i));
+            if (countryName != null) {
+                countries.set(i, countryName);
+            }
+        }
+
         Collections.sort(countries);
-        System.out.println("Available countries:");
+
         for (String country : countries) {
             System.out.println(country);
         }
-        System.out.println("Select a country:");
+
+        System.out.println("select a country from above: ");
+
         Scanner s = new Scanner(System.in);
         return s.nextLine();
     }
 
     private static String promptForLanguage(Translator translator, String country) {
+
         List<String> languages = translator.getCountryLanguages(country);
+
+        LanguageCodeConverter languageConverter = new LanguageCodeConverter();
+
+        for (int i = 0; i < languages.size(); i++) {
+            languages.set(i, languageConverter.fromLanguageCode(languages.get(i)));
+        }
+        
         Collections.sort(languages);
-        System.out.println("Available languages:");
+
         for (String language : languages) {
             System.out.println(language);
         }
-        System.out.println("Select a language:");
+
+        System.out.println("select a language from above:");
+
         Scanner s = new Scanner(System.in);
         return s.nextLine();
     }

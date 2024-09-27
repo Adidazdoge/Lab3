@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * This class provides the service of converting country codes to their names.
@@ -34,18 +35,20 @@ public class CountryCodeConverter {
         this.countryToCode = new HashMap<>();
 
         try {
-            List<String> lines = Files.readAllLines(Paths.get(getClass()
-                    .getClassLoader().getResource(filename).toURI()));
+            List<String> lines = Files.readAllLines(Paths.get(Objects.requireNonNull(getClass()
+                    .getClassLoader().getResource(filename)).toURI()));
 
-            for (String line : lines.subList(1, lines.size())) {
-                String[] parts = line.split("\t");
-                String countryName = parts[0].trim();
-                String countryCode = parts[2].trim();
+            for (String line : lines.subList(1, lines.size())) { 
+                String[] parts = line.split("\t");  
+                if (parts.length >= 2) {
+                    String countryName = parts[0].trim();
+                    String countryCode = parts[2].trim();  
 
-                codeToCountry.put(countryCode, countryName);
-                countryToCode.put(countryName, countryCode);
+                    codeToCountry.put(countryCode, countryName);
+                    countryToCode.put(countryName, countryCode);
+                }
             }
-        }
+        } 
         catch (IOException | URISyntaxException ex) {
             throw new RuntimeException(ex);
         }
@@ -58,7 +61,7 @@ public class CountryCodeConverter {
      * @return the name of the country corresponding to the code
      */
     public String fromCountryCode(String code) {
-        return codeToCountry.get(code);
+        return codeToCountry.get(code.toUpperCase());
     }
 
     /**
