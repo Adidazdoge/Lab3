@@ -15,6 +15,8 @@ import java.util.Scanner;
  */
 public class Main {
 
+    private static final String QUIT = "quit";
+
     /**
      * This is the main entry point of our Translation System!<br/>
      * A class implementing the Translator interface is created and passed into a call to runProgram.
@@ -35,11 +37,11 @@ public class Main {
     public static void runProgram(Translator translator) {
         while (true) {
             String country = promptForCountry(translator);
-            if ("quit".equals(country)) {
+            if (QUIT.equals(country)) {
                 break;
             }
             String language = promptForLanguage(translator, country);
-            if ("quit".equals(language)) {
+            if (QUIT.equals(language)) {
                 break;
             }
 
@@ -48,7 +50,7 @@ public class Main {
             Scanner s = new Scanner(System.in);
             String textTyped = s.nextLine();
 
-            if ("quit".equals(textTyped)) {
+            if (QUIT.equals(textTyped)) {
                 break;
             }
         }
@@ -73,7 +75,7 @@ public class Main {
             System.out.println(country);
         }
 
-        System.out.println("select a country from above: ");
+        System.out.println("select a country from above:");
 
         Scanner s = new Scanner(System.in);
         return s.nextLine();
