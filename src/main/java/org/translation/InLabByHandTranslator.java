@@ -2,25 +2,14 @@ package org.translation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-
-
-// Extra Task: if your group has extra time, you can add support for another country code in this class.
 
 /**
  * An implementation of the Translator interface which translates
  * the country code "can" to several languages.
  */
 public class InLabByHandTranslator implements Translator {
+
     public static final String CANADA = "can";
-    private static final Map<String, String> CANADA_TRANSLATIONS = Map.of(
-            "de", "Kanada",
-            "en", "Canada",
-            "zh", "加拿大",
-            "es", "Canadá",
-            "fa", "کانادا"
-    );
 
     /**
      * Returns the language abbreviations for all languages whose translations are
@@ -32,7 +21,7 @@ public class InLabByHandTranslator implements Translator {
     @Override
     public List<String> getCountryLanguages(String country) {
         if (CANADA.equals(country)) {
-            return new ArrayList<>(List.of("de", "en", "zh", "es", "fa"));
+            return new ArrayList<>(List.of("de", "en", "zh", "es", "fr"));
         }
         return new ArrayList<>();
     }
@@ -57,9 +46,31 @@ public class InLabByHandTranslator implements Translator {
      */
     @Override
     public String translate(String country, String language) {
+        // Resolve the CheckStyle issue by reducing return points and keeping logic clean
+        String result = null;
+
         if (CANADA.equals(country)) {
-            return CANADA_TRANSLATIONS.getOrDefault(language, null);
+            switch (language) {
+                case "de":
+                    result = "Kanada";
+                    break;
+                case "en":
+                    result = "Canada";
+                    break;
+                case "zh":
+                    result = "加拿大";
+                    break;
+                case "es":
+                    result = "Canadá";
+                    break;
+                case "fr":
+                    result = "Canada";
+                    break;
+                default:
+                    result = null;
+                    break;
+            }
         }
-        return null;
+        return result;
     }
 }

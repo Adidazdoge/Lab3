@@ -19,11 +19,8 @@ public class JSONTranslationExample {
     // Note: CheckStyle is configured so that we are allowed to omit javadoc for constructors
     public JSONTranslationExample() {
         try {
-            // this next line of code reads in a file from the resources folder as a String,
-            // which we then create a new JSONArray object from.
-
-            String jsonString =
-                    Files.readString(Paths.get(getClass().getClassLoader().getResource("sample.json").toURI()));
+            String jsonString = Files.readString(Paths.get(getClass()
+                    .getClassLoader().getResource("sample.json").toURI()));
             this.jsonArray = new JSONArray(jsonString);
         }
         catch (IOException | URISyntaxException ex) {
@@ -35,12 +32,14 @@ public class JSONTranslationExample {
      * Returns the Spanish translation of Canada.
      * @return the Spanish translation of Canada
      */
-
     public String getCanadaCountryNameSpanishTranslation() {
 
         JSONObject canada = jsonArray.getJSONObject(CANADA_INDEX);
         return canada.getString("es");
     }
+
+    // TODO Task: Complete the method below to generalize the above to get the country name
+    //            for any country code and language code from sample.json.
 
     /**
      * Returns the name of the country based on the provided country and language codes.
@@ -49,13 +48,23 @@ public class JSONTranslationExample {
      * @return the translation of country to the given language or "Country not found" if there is no translation.
      */
     public String getCountryNameTranslation(String countryCode, String languageCode) {
+        String result = "Country not found"; 
+
         for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject country = jsonArray.getJSONObject(i);
-            if (countryCode.equalsIgnoreCase(country.getString("alpha3"))) {
-                return country.optString(languageCode, "Translation not found");
+            JSONObject countryObject = jsonArray.getJSONObject(i);
+            
+            if (countryObject.getString("alpha3").equalsIgnoreCase(countryCode)) {
+                if (countryObject.has(languageCode)) {
+                    result = countryObject.getString(languageCode);
+                } 
+                else {
+                    result = "Translation not found for the given language";
+                }
+                break; 
             }
         }
-        return "Country not found";
+
+        return result;
     }
 
     /**

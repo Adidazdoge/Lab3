@@ -4,20 +4,22 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class provides the service of converting language codes to their names.
  */
 public class LanguageCodeConverter {
 
-    private final List<String[]> contryinfo = new ArrayList<>();
+    private Map<String, String> codeToLanguage;
+    private Map<String, String> languageToCode;
+
     /**
      * Default constructor which will load the language codes from "language-codes.txt"
      * in the resources folder.
      */
-
     public LanguageCodeConverter() {
         this("language-codes.txt");
     }
@@ -29,23 +31,20 @@ public class LanguageCodeConverter {
      */
     public LanguageCodeConverter(String filename) {
 
+        this.codeToLanguage = new HashMap<>();
+        this.languageToCode = new HashMap<>();
+
         try {
             List<String> lines = Files.readAllLines(Paths.get(getClass()
                     .getClassLoader().getResource(filename).toURI()));
-            for (String line : lines) {
-                String[] parts = line.split("\\s+");
-                if (parts.length > 2) {
-                    String languageCode = parts[parts.length - 1];
-                    String languageName = "";
-                    for (int i = 0; i < parts.length - 2; i++) {
-                        languageName += parts[i] + " ";
-                    }
-                    languageName += parts[parts.length - 2];
-                    contryinfo.add(new String[]{languageName, languageCode});
-                }
-                else {
-                    contryinfo.add(parts);
-                }
+
+            for (String line : lines.subList(1, lines.size())) {
+                String[] parts = line.split("\t");
+                String languageName = parts[0].trim();
+                String languageCode = parts[1].trim();
+
+                codeToLanguage.put(languageCode, languageName);
+                languageToCode.put(languageName, languageCode);
             }
         }
         catch (IOException | URISyntaxException ex) {
@@ -60,12 +59,7 @@ public class LanguageCodeConverter {
      * @return the name of the language corresponding to the code
      */
     public String fromLanguageCode(String code) {
-        for (String[] country : contryinfo) {
-            if (country[1].equals(code)) {
-                return country[0];
-            }
-        }
-        return "not found";
+        return codeToLanguage.get(code);
     }
 
     /**
@@ -74,12 +68,7 @@ public class LanguageCodeConverter {
      * @return the 2-letter code of the language
      */
     public String fromLanguage(String language) {
-        for (String[] country : contryinfo) {
-            if (country[0].equals(language)) {
-                return country[1];
-            }
-        }
-        return "not found";
+        return languageToCode.get(language);
     }
 
     /**
@@ -87,6 +76,6 @@ public class LanguageCodeConverter {
      * @return how many languages are included in this code converter.
      */
     public int getNumLanguages() {
-        return contryinfo.size();
+        return codeToLanguage.size();
     }
 }

@@ -4,15 +4,17 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 /**
  * This class provides the service of converting country codes to their names.
  */
 public class CountryCodeConverter {
-    private final List<String[]> contryinfo = new ArrayList<>();
+
+    private Map<String, String> codeToCountry;
+    private Map<String, String> countryToCode;
 
     /**
      * Default constructor which will load the country codes from "country-codes.txt"
@@ -28,15 +30,21 @@ public class CountryCodeConverter {
      * @throws RuntimeException if the resource file can't be loaded properly
      */
     public CountryCodeConverter(String filename) {
+        this.codeToCountry = new HashMap<>();
+        this.countryToCode = new HashMap<>();
 
         try {
-            List<String> lines = Files.readAllLines(Paths.get(Objects.requireNonNull(getClass()
-                    .getClassLoader().getResource(filename)).toURI()));
-            for (String line : lines) {
-                String[] parts = line.split(" \\s+");
-                contryinfo.add(parts);
-            }
+            List<String> lines = Files.readAllLines(Paths.get(getClass()
+                    .getClassLoader().getResource(filename).toURI()));
 
+            for (String line : lines.subList(1, lines.size())) {
+                String[] parts = line.split("\t");
+                String countryName = parts[0].trim();
+                String countryCode = parts[2].trim();
+
+                codeToCountry.put(countryCode, countryName);
+                countryToCode.put(countryName, countryCode);
+            }
         }
         catch (IOException | URISyntaxException ex) {
             throw new RuntimeException(ex);
@@ -50,12 +58,7 @@ public class CountryCodeConverter {
      * @return the name of the country corresponding to the code
      */
     public String fromCountryCode(String code) {
-        for (String[] country : contryinfo) {
-            if (country[2].equals(code)) {
-                return country[0];
-            }
-        }
-        return "not found";
+        return codeToCountry.get(code);
     }
 
     /**
@@ -64,12 +67,7 @@ public class CountryCodeConverter {
      * @return the 3-letter code of the country
      */
     public String fromCountry(String country) {
-        for (String[] country1 : contryinfo) {
-            if (country1[0].equals(country)) {
-                return country1[2];
-            }
-        }
-        return "not found";
+        return countryToCode.get(country);
     }
 
     /**
@@ -77,6 +75,6 @@ public class CountryCodeConverter {
      * @return how many countries are included in this code converter.
      */
     public int getNumCountries() {
-        return contryinfo.size();
+        return codeToCountry.size();
     }
 }
