@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 
@@ -16,6 +17,7 @@ import org.json.JSONArray;
 public class JSONTranslator implements Translator {
 
     // TODO Task: pick appropriate instance variables for this class
+    private final Map<String, Map<String, String>> countryTranslations = null;
 
     /**
      * Constructs a JSONTranslator using data from the sample.json resources file.
