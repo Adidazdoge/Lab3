@@ -2,7 +2,7 @@ Country	Alpha-2 code	Alpha-3 code	Numeric
 Afghanistan	AF	AFG	004
 Albania	AL	ALB	008
 Algeria	DZ	DZA	012
-American Samoa	AS	ASM	016
+American Samoa AS	ASM	016
 Andorra	AD	AND	020
 Angola	AO	AGO	024
 Anguilla	AI	AIA	660
